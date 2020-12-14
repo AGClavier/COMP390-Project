@@ -1,50 +1,59 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace UnityStandardAssets.Characters.ThirdPerson {
-
-    public class BasicAI : MonoBehaviour
+namespace UnityStandardAssets.Characters.ThirdPerson
+{
+    public class basicAI : MonoBehaviour
     {
-        public NavMeshAgent agent;
-        public ThirdPersonCharacter character;
+        //I am using a NavMeshAgent to create a moveable area for the AI
+        private NavMeshAgent nav;
+        //"ThirdPersonCharacter" is the name of the script I am using from Unity's Standard Assests, I reference it here so I can use it with my AI script
+        public ThirdPersonCharacter enemy;
 
         public enum State
         {
             PATROL,
-            CHASE
+            CHASE,
         }
 
         public State state;
         private bool alive;
 
-        //Variable for patrolling
-        public GameObject[] waypoints;
-        public int waypointID = 0;
-        public float patrolSpeed = 0.5f;
+        //Variables for patrolling
+        public GameObject[] moveSpots;
+        public int moveSpotsID = 0;
+        private float patrolSpeed = 0.5f;
 
-        //Variable for chasing
-        public float chaseSpeed = 1f;
-        public GameObject target;
+        //Variables for chasing
+        private float chaseSpeed = 1f;
+        private GameObject target;
+
+        //variables for sight
+        private float heightMultiplier = 1.36f;
+        private float sightDist = 1;
 
         void Start()
         {
-            agent = GetComponent<NavMeshAgent>();
-            character = GetComponent<ThirdPersonCharacter>();
+            nav = GetComponent<NavMeshAgent>();
+            enemy = GetComponent<ThirdPersonCharacter>();
 
-            agent.updatePosition = true;
-            agent.updateRotation = false;
+            nav.updatePosition = true;
+            nav.updateRotation = false;
 
-            state = BasicAI.State.PATROL;
+            state = basicAI.State.PATROL;
 
             alive = true;
 
             StartCoroutine(FSM());
         }
 
+        //Here I create a finite state machine in which the AI follows
+        //When spawned in the AI will go into its PATROL state where they navigate the map according the its choosen destination is
+        //If the AI engages with the user they will switch to their CHASE state until the user is out of sight or caught, to which the AI will revert back to the state PATROL 
         IEnumerator FSM()
         {
             while (alive)
@@ -63,42 +72,81 @@ namespace UnityStandardAssets.Characters.ThirdPerson {
             }
         }
 
+       //In my Patrol method I set the movespots on the NavMesh and use an if/else statement to determine which movespot will be the AI's next destination
         void Patrol()
         {
-            agent.speed = patrolSpeed;
-            if (Vector3.Distance (this.transform.position, waypoints[waypointID].transform.position) >= 2)
+            nav.speed = patrolSpeed;
+            if (Vector3.Distance(this.transform.position, moveSpots[moveSpotsID].transform.position) >= 2)
             {
-                agent.SetDestination(waypoints[waypointID].transform.position);
-                character.Move(agent.desiredVelocity);
+                nav.SetDestination(moveSpots[moveSpotsID].transform.position);
+                enemy.Move(nav.desiredVelocity);
             }
-            else if (Vector3.Distance(this.transform.position, waypoints[waypointID].transform.position) <= 2)
+            else if (Vector3.Distance(this.transform.position, moveSpots[moveSpotsID].transform.position) <= 2)
             {
-                waypointID += 1;
+                moveSpotsID += 1;
 
-                if (waypointID > waypoints.Length) 
+                if (moveSpotsID >= moveSpots.Length)
                 {
-                    waypointID = 0;
+                    moveSpotsID = 0;
                 }
             }
             else
             {
-                character.Move(Vector3.zero);
+                enemy.Move(Vector3.zero);
             }
         }
 
+        //In my Chase method ive set the parameters for the AI to increase in speed and chase the target (user) when spotted
         void Chase()
         {
-            agent.speed = chaseSpeed;
-            agent.SetDestination(target.transform.position);
-            character.Move(agent.desiredVelocity);
+            nav.speed = chaseSpeed;
+            nav.SetDestination(target.transform.position);
+            enemy.Move(nav.desiredVelocity);
         }
 
-        void OnTriggerEnter (Collider col)
+        void Update()
         {
-            if (col.tag == "MC")
+            RaycastHit hit;
+
+            //Here I am creating three raycasts which work as the AI's vision
+            //When the user is caught in a raycast the FSM will kick in and the AI will begin chasing the user, whilst their is no target in sight the AI will go back to patrolling
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, transform.forward, out hit, sightDist))
             {
-                state = BasicAI.State.CHASE;
-                target = col.gameObject;
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = basicAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+                else
+                {
+                    state = basicAI.State.PATROL;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + transform.right).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = basicAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+                else
+                {
+                    state = basicAI.State.PATROL;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward - transform.right).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = basicAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+                else
+                {
+                    state = basicAI.State.PATROL;
+                }
             }
         }
     }

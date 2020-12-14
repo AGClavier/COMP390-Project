@@ -6,6 +6,12 @@ TagManager:
   tags:
   - MC
   - droid
+  - Movespot
+  - exit1
+  - exit2
+  - key
+  - chip
+  - ui
   layers:
   - Default
   - TransparentFX
