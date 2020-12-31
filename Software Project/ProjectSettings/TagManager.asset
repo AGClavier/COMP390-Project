@@ -12,6 +12,7 @@ TagManager:
   - key
   - chip
   - ui
+  - Door
   layers:
   - Default
   - TransparentFX

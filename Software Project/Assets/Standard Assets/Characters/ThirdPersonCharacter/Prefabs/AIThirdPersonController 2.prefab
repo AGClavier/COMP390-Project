@@ -615,20 +615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c5923371f2c814aa5ec4cfe2561137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
-  character: {fileID: 0}
+  enemy: {fileID: 0}
   state: 0
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointID: 0
-  patrolSpeed: 0.5
-  chaseSpeed: 1
-  target: {fileID: 0}
-  investigateWait: 5
-  heightMultiplier: 0
-  sightDist: 1
+  moveSpots: []
+  moveSpotsID: 0
 --- !u!1 &113866
 GameObject:
   m_ObjectHideFlags: 0

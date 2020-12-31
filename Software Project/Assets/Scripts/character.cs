@@ -34,6 +34,7 @@ public class character : MonoBehaviour
         if (col.tag == "key")
         {
             Destroy(col.gameObject);
+            Destroy(GameObject.FindWithTag("Door"));
         }
 
         //When the user picks up a chip, the data is sent to the "UIManager" script and their score is increased

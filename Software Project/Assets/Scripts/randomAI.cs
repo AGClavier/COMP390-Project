@@ -9,11 +9,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
     public class randomAI : MonoBehaviour
     {
         //I am using a LayerMask to stop the Ai from being able to look through walls
-        public LayerMask mask;
+        //public LayerMask mask;
         //I am using a NavMeshAgent to create a moveable area for the AI
         private NavMeshAgent nav;
         //"ThirdPersonCharacter" is the name of the script I am using from Unity's Standard Assests, I reference it here so I can use it with my AI script
         public ThirdPersonCharacter enemy;
+
+        public enum State
+        {
+            PATROL,
+            CHASE,
+            INVESTIGATE,
+        }
 
         public State state;
         private bool alive;
@@ -24,33 +31,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private float patrolSpeed = 0.5f;
 
         //Variables for chasing
-        private float chaseSpeed = 1f;
+        private float chaseSpeed = 0.75f;
         private GameObject target;
 
-        //variables for sight
-        private float sightDist = 7;
-        private float FieldOfView = 22;
-        private float DegreeOffset = 90;
-        private MeshFilter LOSMeshFilter;
-        private Vector3 origin;
-        private int rayCount = 40;
+        //Variables for investigating
+        private float timer = 0;
+        private float investigateWait = 4;
+        private Vector3 investigateSpot;
 
-        public enum State
-        {
-            PATROL,
-            CHASE,
-        }
+        //variables for sight
+        private float heightMultiplier = 1.36f;
+        private float sightDist = 6;
+        RaycastHit hit;
 
         void Start()
         {
-            LOSMeshFilter = GetComponent<MeshFilter>();
+            //LOSMeshFilter = GetComponent<MeshFilter>();
             nav = GetComponent<NavMeshAgent>();
             enemy = GetComponent<ThirdPersonCharacter>();
 
             nav.updatePosition = true;
             nav.updateRotation = false;
-
-            origin = Vector3.one - Vector3.right;
 
             moveSpots = GameObject.FindGameObjectsWithTag("Movespot");
             moveSpotsID = Random.Range(0, moveSpots.Length);
@@ -76,6 +77,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
                     case State.CHASE:
                         Chase();
+                        break;
+
+                    case State.INVESTIGATE:
+                        Investigate();
                         break;
                 }
                 yield return null;
@@ -104,127 +109,134 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         //In my Chase method ive set the parameters for the AI to increase in speed and chase the target (user) when spotted
         void Chase()
         {
+            timer += Time.deltaTime;
             nav.speed = chaseSpeed;
             nav.SetDestination(target.transform.position);
             enemy.Move(nav.desiredVelocity);
+
+            if (timer >= investigateWait)
+            {
+                state = randomAI.State.INVESTIGATE;
+                timer = 0;
+            }
+        }
+
+        void Investigate()
+        {
+            timer += Time.deltaTime;
+            nav.SetDestination(target.transform.position);
+            transform.LookAt(investigateSpot);
+
+            if (timer >= investigateWait)
+            {
+                state = randomAI.State.PATROL;
+                timer = 0;
+            }
         }
 
         void FixedUpdate()
         {
-            //Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, transform.forward * sightDist, Color.green);
-            //Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + transform.right).normalized * sightDist, Color.green);
-            //Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward - transform.right).normalized * sightDist, Color.green);
+            Vector3 dir1 = Quaternion.Euler(0, 15, 0) * transform.forward;
+            Vector3 dir2 = Quaternion.Euler(0, 22.5f, 0) * transform.forward;
+            Vector3 dir3 = Quaternion.Euler(0, 30, 0) * transform.forward;
+            Vector3 dir4 = Quaternion.Euler(0, 7.5f, 0) * transform.forward;
+            Vector3 dir5 = Quaternion.Euler(0, -15, 0) * transform.forward;
+            Vector3 dir6 = Quaternion.Euler(0, -22.5f, 0) * transform.forward;
+            Vector3 dir7 = Quaternion.Euler(0, -30, 0) * transform.forward;
+            Vector3 dir8 = Quaternion.Euler(0, -7.5f, 0) * transform.forward;
 
-            //if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, transform.forward, out hit, sightDist))
-            //{
-            //    if (hit.collider.gameObject.tag == "MC")
-            //    {
-            //        state = randomAI.State.CHASE;
-            //        target = hit.collider.gameObject;
-            //    }
-            //    else
-            //    {
-            //        state = randomAI.State.PATROL;
-            //    }
-            //}
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, transform.forward * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir1).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir2).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir3).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir4).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir5).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir6).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir7).normalized * sightDist, Color.black);
+            Debug.DrawRay(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir8).normalized * sightDist, Color.black);
 
-            //if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + transform.right).normalized, out hit, sightDist))
-            //{
-            //    if (hit.collider.gameObject.tag == "MC")
-            //    {
-            //        state = randomAI.State.CHASE;
-            //        target = hit.collider.gameObject;
-            //    }
-            //    else
-            //    {
-            //        state = randomAI.State.PATROL;
-            //    }
-            //}
-
-            //if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward - transform.right).normalized, out hit, sightDist))
-            //{
-            //    if (hit.collider.gameObject.tag == "MC")
-            //    {
-            //        state = randomAI.State.CHASE;
-            //        target = hit.collider.gameObject;
-            //    }
-            //    else
-            //    {
-            //        state = randomAI.State.PATROL;
-            //    }
-            //}
-
-            //In this version instead of having three rays, I have created a single cone shaped ray
-            Vector3[] points = new Vector3[rayCount + 1 + 1];
-
-            RaycastHit hit;
-
-            for (int i = 1; i <= rayCount + 1; i++)
+            //Here I am creating three raycasts which work as the AI's vision
+            //When the user is caught in a raycast the FSM will kick in and the AI will begin chasing the user, whilst their is no target in sight the AI will go back to patrolling
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, transform.forward, out hit, sightDist))
             {
-                float degrees = (((float)(i - 1) / rayCount) * FieldOfView);
-                degrees -= FieldOfView / 2;
-                degrees -= transform.parent.rotation.eulerAngles.y;
-                degrees += DegreeOffset;
-
-                if (Physics.Raycast(origin, RadiansToVector3(degrees * Mathf.Deg2Rad).normalized, out hit, sightDist, mask))
+                if (hit.collider.gameObject.tag == "MC")
                 {
-                    points[i] = hit.point;
-                    Debug.Log("hit");
-
-                    //if (hit.collider.gameObject.tag == "MC")
-                    //{
-                        
-                    //    state = randomAI.State.CHASE;
-                    //    target = hit.collider.gameObject;
-                    //}
-                    //else
-                    //{
-                    //    state = randomAI.State.PATROL;
-                    //}
-                }
-                else
-                {
-                    points[i] = RadiansToVector3(degrees * Mathf.Deg2Rad).normalized * sightDist;
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
                 }
             }
 
-            LOSMeshFilter.mesh = CreateMeshFromPoints(points);
-        }
-
-        //This method creates an angle that I use for my line of sight
-        Vector3 RadiansToVector3(float degrees)
-        {
-            return new Vector3(Mathf.Cos(degrees), 0, Mathf.Sin(degrees));
-        }
-
-        //This method creates a visible mesh so the user can visibly see the enemies line of sight
-        /// <summary>
-        /// The reason the layer mask might not be working is because it needs to be on its own script and added to a gameobject which attaches to the enemy
-        /// </summary>
-        Mesh CreateMeshFromPoints(Vector3[] points)
-        {
-            Mesh m = new Mesh();
-            m.name = "LOSMesh";
-
-            points[0] = origin;
-            m.vertices = points;
-
-            int[] trianglesArray = new int[(m.vertices.Length - 1) * 3];
-
-            int count = 1;
-            for (int i = 0; i < trianglesArray.Length - 3; i += 3)
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir1).normalized, out hit, sightDist))
             {
-                trianglesArray[i] = count;
-                trianglesArray[i + 1] = 0;
-                trianglesArray[i + 2] = count + 1;
-                count++;
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
             }
 
-            m.triangles = trianglesArray;
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir2).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
 
-            m.RecalculateNormals();
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir3).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
 
-            return m;
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir4).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir5).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir6).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir7).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
+
+            if (Physics.Raycast(transform.position + Vector3.up * heightMultiplier, (transform.forward + dir8).normalized, out hit, sightDist))
+            {
+                if (hit.collider.gameObject.tag == "MC")
+                {
+                    state = randomAI.State.CHASE;
+                    target = hit.collider.gameObject;
+                }
+            }
         }
     }
 }
