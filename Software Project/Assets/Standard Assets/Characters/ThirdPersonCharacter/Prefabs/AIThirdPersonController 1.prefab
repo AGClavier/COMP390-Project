@@ -664,9 +664,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa07a87624d959749b7ea887b9e9c47f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mask:
+  DegreeOffset: 90
+  layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   enemy: {fileID: 0}
   state: 0
   moveSpots: []

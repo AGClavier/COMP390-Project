@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class character : MonoBehaviour
@@ -9,14 +11,16 @@ public class character : MonoBehaviour
 
     Vector3 original_pos;
     Rigidbody mc;
+    Rigidbody proj;
+    Rigidbody cloak;
+    GameObject prefab1;
+    GameObject prefab2;
 
-    void Start()
-    {
-        mc = GetComponent<Rigidbody>();
-        original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
-
-        ui = GameObject.FindWithTag("ui").GetComponent<UIManager>();
-    }
+    private float timerStart = 0;
+    private float timerStop = 4;
+    private int ammo = 0;
+    private float normalSpeed = 0;
+    private float hiddenSpeed = 25;
 
     void OnTriggerEnter(Collider col)
     {
@@ -49,6 +53,56 @@ public class character : MonoBehaviour
         {
             mc.transform.position = original_pos;
             ui.IncrementLives();
+        }
+    }
+
+    void Start()
+    {
+        mc = GetComponent<Rigidbody>();
+
+        prefab1 = Resources.Load("Projectile") as GameObject;
+        prefab2 = Resources.Load("Cloak") as GameObject;
+
+        original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
+
+        ui = GameObject.FindWithTag("ui").GetComponent<UIManager>();
+    }
+
+    void Update()
+    {
+        timerStart += Time.deltaTime;
+
+        if (Input.GetMouseButtonDown(0) && ammo == 0)
+        {
+            GameObject Projectile = Instantiate(prefab1) as GameObject;
+            Projectile.transform.position = transform.position + Vector3.up * 0.5f + transform.forward;
+            proj = Projectile.GetComponent<Rigidbody>();
+            proj.velocity = transform.forward * 9;
+
+            ammo++;
+        }
+
+        if (GameObject.FindWithTag("projectile") != null)
+        {
+            if (timerStart >= timerStop)
+            {
+                Destroy(GameObject.FindWithTag("projectile"));
+                timerStart = 0;
+
+                ammo--;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            gameObject.tag = "MCHidden";
+            mc.drag = hiddenSpeed;
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            gameObject.tag = "MC";
+            mc.drag = normalSpeed;
         }
     }
 }

@@ -13,6 +13,10 @@ TagManager:
   - chip
   - ui
   - Door
+  - projectile
+  - wall
+  - MCHidden
+  - cam
   layers:
   - Default
   - TransparentFX
