@@ -15,12 +15,28 @@ public class character : MonoBehaviour
     Rigidbody cloak;
     GameObject prefab1;
     GameObject prefab2;
+    GameObject door;
 
     private float timerStart = 0;
     private float timerStop = 4;
+    private float timerStart2 = 0;
+    private float timerStop2 = 2;
     private int ammo = 0;
     private float normalSpeed = 0;
     private float hiddenSpeed = 25;
+
+    void Start()
+    {
+        mc = GetComponent<Rigidbody>();
+
+        prefab1 = Resources.Load("Projectile") as GameObject;
+        prefab2 = Resources.Load("Cloak") as GameObject;
+        door = Resources.Load("Door1") as GameObject;
+
+        original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
+
+        ui = GameObject.FindWithTag("ui").GetComponent<UIManager>();
+    }
 
     void OnTriggerEnter(Collider col)
     {
@@ -35,10 +51,20 @@ public class character : MonoBehaviour
             SceneManager.LoadScene("Stage3");
         }
 
+        if (col.tag == "exit3")
+        {
+            SceneManager.LoadScene("Victory");
+        }
+
+        if (col.tag == "Start")
+        {
+            Destroy(GameObject.FindWithTag("Door"));
+        }
+
         if (col.tag == "key")
         {
             Destroy(col.gameObject);
-            Destroy(GameObject.FindWithTag("Door"));
+            Destroy(GameObject.FindWithTag("Door2"));
         }
 
         //When the user picks up a chip, the data is sent to the "UIManager" script and their score is increased
@@ -54,18 +80,6 @@ public class character : MonoBehaviour
             mc.transform.position = original_pos;
             ui.IncrementLives();
         }
-    }
-
-    void Start()
-    {
-        mc = GetComponent<Rigidbody>();
-
-        prefab1 = Resources.Load("Projectile") as GameObject;
-        prefab2 = Resources.Load("Cloak") as GameObject;
-
-        original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
-
-        ui = GameObject.FindWithTag("ui").GetComponent<UIManager>();
     }
 
     void Update()
@@ -103,6 +117,17 @@ public class character : MonoBehaviour
         {
             gameObject.tag = "MC";
             mc.drag = normalSpeed;
+        }
+
+        if (GameObject.FindWithTag("Door") == null)
+        {
+            timerStart2 += Time.deltaTime;
+
+            if (timerStart2 >= timerStop2)
+            {
+                Instantiate(door, new Vector3(-1, 1, -10), Quaternion.identity);
+                timerStart2 = 0;
+            }
         }
     }
 }

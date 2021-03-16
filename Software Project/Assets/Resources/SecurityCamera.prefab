@@ -106,8 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d34b7526261115468caeae0d2f926c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ai: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   state: 0
   spot: 0
+  destination: {x: 0, y: 0, z: 0}
+  destinations: {fileID: 0}

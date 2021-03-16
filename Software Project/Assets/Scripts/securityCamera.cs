@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -21,16 +20,23 @@ public class securityCamera : MonoBehaviour
     private float wait = 4;
 
     //variables for sight
-    private GameObject target;
-    private float sightDist = 8;
+    public Vector3 destination;
+    public GameObject destinations;
+    private float sightDist = 4;
+    private float maskSightDist = 8;
     private float lineOfSight = 60;
-    private float startingAngle = 90;
+    private float startingAngle = 0;
     private int raycast = 1024;
     RaycastHit hit;
 
     private Mesh mesh;
     private MeshFilter lOSLayer;
     private Material lOSColour;
+
+    private GameObject[] array;
+    private int index;
+    private int i = 0;
+    private int j = 0;
 
     public enum State
     {
@@ -111,13 +117,26 @@ public class securityCamera : MonoBehaviour
         lOSColour.color = Color.red;
         timer += Time.deltaTime;
 
-        spot = 1;
+        if (i == 0)
+        {
+            array = GameObject.FindGameObjectsWithTag("droid");
+            index = Random.Range(0, array.Length);
+            i = 1;
+            j = 1;
+        }
+
+        if (j == 1)
+        {
+            ai = GameObject.FindGameObjectsWithTag("droid")[index].GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicAI>();
+            spot = 1;
+        }
 
         if (timer >= wait)
         {
             state = securityCamera.State.PATROL;
             timer = 0;
             spot = 0;
+            i = 0;
         }
 
         if (spot == 1)
@@ -137,14 +156,14 @@ public class securityCamera : MonoBehaviour
             angle -= lineOfSight / 2;
             angle += startingAngle;
 
-            if (Physics.Raycast(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, sightDist, layerMask))
+            if (Physics.Raycast(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, maskSightDist/2, layerMask))
             {
                 points[i] = hit.point - transform.position;
-
+                Debug.DrawRay(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), Color.red);
             }
             else
             {
-                points[i] = Vector3.down * 2 + RadiansToVector3(angle * Mathf.Deg2Rad).normalized * sightDist;
+                points[i] = Vector3.down * 2 + RadiansToVector3(angle * Mathf.Deg2Rad).normalized * maskSightDist;
             }
         }
 
@@ -176,7 +195,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -185,7 +205,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -194,7 +215,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -203,7 +225,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -212,7 +235,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -221,7 +245,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -230,7 +255,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -239,7 +265,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
 
@@ -248,7 +275,8 @@ public class securityCamera : MonoBehaviour
             if (hit.collider.gameObject.tag == "MC")
             {
                 state = securityCamera.State.SPOTTED;
-                target = hit.collider.gameObject;
+                destination = hit.point;
+                destinations = hit.collider.gameObject;
             }
         }
     }

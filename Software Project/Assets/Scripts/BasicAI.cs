@@ -1,26 +1,26 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
+//using System.Collections.Generic;
+//using System.ComponentModel.Design;
+//using System.Runtime.CompilerServices;
+//using System.Security.Cryptography;
+//using System.Security.Cryptography.X509Certificates;
+//using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
     public class basicAI : MonoBehaviour
     {
-        [SerializeField] private securityCamera security;
         [SerializeField] private LayerMask layerMask;
 
         //I am using a NavMeshAgent to create a moveable area for the AI
         private NavMeshAgent nav;
         //"ThirdPersonCharacter" is the name of the script I am using from Unity's Standard Assests, I reference it here so I can use it with my AI script
         public ThirdPersonCharacter enemy;
-
-        private GameObject[] droid; 
 
         public State state;
         private bool alive;
@@ -41,8 +41,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 investigateSpot;
 
         //Variables for requesting
-        private float requestTimer = 0;
-        private float requestWait = 0;
+        private Vector3 spot;
+        private int i = 0;
         private bool help;
 
         //variables for sight
@@ -50,7 +50,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private float sightDist = 6;
         private float lineOfSight = 30;
         private float startingAngle = 90;
-        private int raycast = 1024;
+        private int raycast = 40;
         RaycastHit hit;
 
         private Mesh mesh;
@@ -75,7 +75,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             mesh = new Mesh();
 
-            points[0] = Vector3.up * height;
+            points[0] = Vector3.zero;
             mesh.vertices = points;
 
             int[] trianglesArray = new int[(mesh.vertices.Length - 1) * 3];
@@ -101,12 +101,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             help = true;
 
-            //if (help == true)
-            //{
-            //    state = basicAI.State.REQUEST;
-            //    Debug.Log("b" + help);
-            //}
-
             return help;
         }
 
@@ -118,8 +112,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             nav = GetComponent<NavMeshAgent>();
             enemy = GetComponent<ThirdPersonCharacter>();
 
-            droid = GameObject.FindGameObjectsWithTag("droid");
-
             nav.updatePosition = true;
             nav.updateRotation = false;
 
@@ -127,8 +119,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             alive = true;
 
             StartCoroutine(FSM());
-
-            Debug.Log("a" + help);
         }
 
         //Here I create a finite state machine in which the AI follows
@@ -226,30 +216,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void Investigate()
         {
             timer += Time.deltaTime;
-            requestTimer += Time.deltaTime;
             lOSColour.color = Color.yellow;
 
             if (target != null)
             {
                 nav.SetDestination(target.transform.position);
-                transform.LookAt(target.transform.position);
+                //transform.LookAt(target.transform.position);
             }
 
             if (timer >= wait)
             {
                 state = basicAI.State.PATROL;
                 timer = 0;
-            }
-
-            if (requestTimer >= wait)
-            {
-                requestTimer = 0;
-                requestWait ++;
-            }
-
-            if (requestWait >= 2)
-            {
-                state = basicAI.State.REQUEST;
             }
         }
 
@@ -258,41 +236,50 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             timer += Time.deltaTime;
             lOSColour.color = Color.black;
 
-            nav.SetDestination(GameObject.FindWithTag("cam").transform.position);
+            if (i == 0)
+            {
+                spot = GameObject.FindWithTag("MC").transform.position;
+                i = 1;
+            }
+
+            nav.SetDestination(spot);
             enemy.Move(nav.desiredVelocity);
             //transform.LookAt(checkSpot);
 
-            if (timer >= wait)
+            if (timer >= wait + 10)
             {
                 state = basicAI.State.PATROL;
                 timer = 0;
+                i = 0;
                 help = false;
             }
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (help == true)
             {
                 state = basicAI.State.REQUEST;
-                Debug.Log("b" + help);
             }
 
             Vector3[] points = new Vector3[raycast + 2];
 
-            for (int i = 1; i <= raycast + 1; i++)
+            for (int i = 0; i <= raycast; i++)
             {
                 float angle = (((float)(i - 1) / raycast) * lineOfSight);
                 angle -= lineOfSight / 2;
+                angle -= transform.rotation.eulerAngles.y;
                 angle += startingAngle;
-
-                if (Physics.Raycast(transform.position + Vector3.up * height, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, sightDist, layerMask))
+                
+                if (Physics.Raycast(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, sightDist, layerMask))
                 {
                     points[i] = hit.point - transform.position;
+                    //Debug.DrawRay(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad) * sightDist, Color.red);
                 }
                 else
                 {
-                    points[i] = Vector3.up * height + RadiansToVector3(angle * Mathf.Deg2Rad).normalized * sightDist;
+                    points[i] = RadiansToVector3(angle * Mathf.Deg2Rad).normalized * sightDist;
+                    //Debug.DrawRay(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad) * sightDist, Color.green);
                 }
             }
 

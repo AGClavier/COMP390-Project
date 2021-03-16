@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 409e91d6f4121e4489ca1a8fb9eb9bc3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - key: {fileID: 2841325881116972995, guid: 111c7c93e3f84104f8768b5b356767dc, type: 3}
+  - chip: {fileID: 3975549592352869156, guid: 19ebbcef99f679f43b4d5809f9c4759d, type: 3}
+  - keyInstantiate: {instanceID: 0}
+  - chipInstantiate: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

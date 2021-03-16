@@ -17,6 +17,12 @@ TagManager:
   - wall
   - MCHidden
   - cam
+  - randomDroid
+  - exit3
+  - Door2
+  - Start
+  - kLocations
+  - cLocations
   layers:
   - Default
   - TransparentFX

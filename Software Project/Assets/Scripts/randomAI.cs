@@ -51,7 +51,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             CHASE,
             CHECK,
             INVESTIGATE,
-            REQUEST,
         }
 
         Vector3 RadiansToVector3(float angle)
@@ -129,10 +128,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     case State.INVESTIGATE:
                         Investigate();
                         break;
-
-                    case State.REQUEST:
-                        Request();
-                        break;
                 }
                 yield return null;
             }
@@ -208,11 +203,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 state = randomAI.State.PATROL;
                 timer = 0;
             }
-        }
-
-        void Request()
-        {
-
         }
 
         void FixedUpdate()
