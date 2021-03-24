@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class character : MonoBehaviour
@@ -11,10 +7,10 @@ public class character : MonoBehaviour
 
     Vector3 original_pos;
     Rigidbody mc;
-    Rigidbody proj;
+    Rigidbody projectile;
     Rigidbody cloak;
-    GameObject prefab1;
-    GameObject prefab2;
+    GameObject proj;
+    GameObject clk;
     GameObject door;
 
     private float timerStart = 0;
@@ -29,8 +25,8 @@ public class character : MonoBehaviour
     {
         mc = GetComponent<Rigidbody>();
 
-        prefab1 = Resources.Load("Projectile") as GameObject;
-        prefab2 = Resources.Load("Cloak") as GameObject;
+        proj = Resources.Load("Projectile") as GameObject;
+        clk = Resources.Load("Cloak") as GameObject;
         door = Resources.Load("Door1") as GameObject;
 
         original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
@@ -80,6 +76,12 @@ public class character : MonoBehaviour
             mc.transform.position = original_pos;
             ui.IncrementLives();
         }
+
+        if (col.tag == "randomDroid")
+        {
+            mc.transform.position = original_pos;
+            ui.IncrementLives();
+        }
     }
 
     void Update()
@@ -88,10 +90,10 @@ public class character : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && ammo == 0)
         {
-            GameObject Projectile = Instantiate(prefab1) as GameObject;
+            GameObject Projectile = Instantiate(proj) as GameObject;
             Projectile.transform.position = transform.position + Vector3.up * 0.5f + transform.forward;
-            proj = Projectile.GetComponent<Rigidbody>();
-            proj.velocity = transform.forward * 9;
+            projectile = Projectile.GetComponent<Rigidbody>();
+            projectile.velocity = transform.forward * 9;
 
             ammo++;
         }

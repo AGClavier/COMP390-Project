@@ -1,13 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Threading;
 using UnityEngine;
 
 public class securityCamera : MonoBehaviour
 {
-    [SerializeField] private UnityStandardAssets.Characters.ThirdPerson.basicAI ai;
+    [SerializeField] private UnityStandardAssets.Characters.ThirdPerson.basicDroid ai;
     [SerializeField] private LayerMask layerMask;
 
     public State state;
@@ -21,12 +17,12 @@ public class securityCamera : MonoBehaviour
 
     //variables for sight
     public Vector3 destination;
-    public GameObject destinations;
+    public GameObject target;
     private float sightDist = 4;
     private float maskSightDist = 8;
     private float lineOfSight = 60;
-    private float startingAngle = 0;
-    private int raycast = 1024;
+    private float startingAngle = 90;
+    private int raycast = 40;
     RaycastHit hit;
 
     private Mesh mesh;
@@ -49,7 +45,7 @@ public class securityCamera : MonoBehaviour
         return new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
     }
 
-    Mesh CreateMeshFromPoints(Vector3[] points)
+    Mesh CreateMesh(Vector3[] points)
     {
         mesh = new Mesh();
 
@@ -127,7 +123,7 @@ public class securityCamera : MonoBehaviour
 
         if (j == 1)
         {
-            ai = GameObject.FindGameObjectsWithTag("droid")[index].GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicAI>();
+            ai = GameObject.FindGameObjectsWithTag("droid")[index].GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicDroid>();
             spot = 1;
         }
 
@@ -154,6 +150,7 @@ public class securityCamera : MonoBehaviour
 
             float angle = (((float)(i - 1) / raycast) * lineOfSight);
             angle -= lineOfSight / 2;
+            angle -= transform.rotation.eulerAngles.y;
             angle += startingAngle;
 
             if (Physics.Raycast(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, maskSightDist/2, layerMask))
@@ -167,7 +164,7 @@ public class securityCamera : MonoBehaviour
             }
         }
 
-        lOSLayer.mesh = CreateMeshFromPoints(points);
+        lOSLayer.mesh = CreateMesh(points);
 
         Vector3 dir1 = Quaternion.Euler(0, 15, 0) * transform.forward;
         Vector3 dir2 = Quaternion.Euler(0, 22.5f, 0) * transform.forward;
@@ -196,7 +193,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -206,7 +203,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -216,7 +213,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -226,7 +223,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -236,7 +233,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -246,7 +243,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -256,7 +253,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -266,7 +263,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
 
@@ -276,7 +273,7 @@ public class securityCamera : MonoBehaviour
             {
                 state = securityCamera.State.SPOTTED;
                 destination = hit.point;
-                destinations = hit.collider.gameObject;
+                target = hit.collider.gameObject;
             }
         }
     }
