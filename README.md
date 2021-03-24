@@ -1,1 +1,2 @@
-# COMP390-Software
+Stealth video game in Unity
+Final year project for university
