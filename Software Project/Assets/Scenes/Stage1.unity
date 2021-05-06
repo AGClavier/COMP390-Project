@@ -735,7 +735,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Score: 0'
+  m_text: 'Score: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1052,6 +1052,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
+      propertyPath: movespot.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
       propertyPath: moveSpots.Array.size
       value: 8
       objectReference: {fileID: 0}
@@ -1060,6 +1065,46 @@ PrefabInstance:
       propertyPath: waypoints.Array.size
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[0]
+      value: 
+      objectReference: {fileID: 1373210063}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[1]
+      value: 
+      objectReference: {fileID: 1469718314}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[2]
+      value: 
+      objectReference: {fileID: 1845318271}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[3]
+      value: 
+      objectReference: {fileID: 701296008}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[4]
+      value: 
+      objectReference: {fileID: 515244399}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[5]
+      value: 
+      objectReference: {fileID: 1493585328}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[6]
+      value: 
+      objectReference: {fileID: 600895518}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[7]
+      value: 
+      objectReference: {fileID: 901750559}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
       propertyPath: moveSpots.Array.data[0]
@@ -2182,7 +2227,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622872522}
   m_LocalRotation: {x: 0.70806277, y: -0, z: -0, w: 0.7061495}
-  m_LocalPosition: {x: 1.96, y: 21, z: 3.35}
+  m_LocalPosition: {x: 1.96, y: 24.95, z: 3.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2105520979}
@@ -2697,7 +2742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lives: 3'
+  m_text: 'Lives: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3231,6 +3276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
+      propertyPath: movespot.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
       propertyPath: moveSpots.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -3239,6 +3289,16 @@ PrefabInstance:
       propertyPath: waypoints.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[0]
+      value: 
+      objectReference: {fileID: 1373210063}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[1]
+      value: 
+      objectReference: {fileID: 1469718314}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
       propertyPath: moveSpots.Array.data[0]
@@ -3915,6 +3975,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
+      propertyPath: movespot.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
       propertyPath: moveSpots.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -3923,6 +3988,16 @@ PrefabInstance:
       propertyPath: waypoints.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[0]
+      value: 
+      objectReference: {fileID: 600895518}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[1]
+      value: 
+      objectReference: {fileID: 1493585328}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
       propertyPath: moveSpots.Array.data[0]
@@ -4783,7 +4858,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 436670, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.21
+      value: -8.63
       objectReference: {fileID: 0}
     - target: {fileID: 436670, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4791,7 +4866,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 436670, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.16
+      value: -5.07
       objectReference: {fileID: 0}
     - target: {fileID: 436670, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4828,6 +4903,10 @@ PrefabInstance:
     - target: {fileID: 19597056, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_Radius
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19597056, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19597056, guid: f2f78377156eca9409a59bd781f4087e, type: 3}
       propertyPath: m_AutoRepath
@@ -4956,6 +5035,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
+      propertyPath: movespot.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
       propertyPath: moveSpots.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -4964,6 +5048,16 @@ PrefabInstance:
       propertyPath: waypoints.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[0]
+      value: 
+      objectReference: {fileID: 701296008}
+    - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
+        type: 3}
+      propertyPath: movespot.Array.data[1]
+      value: 
+      objectReference: {fileID: 515244399}
     - target: {fileID: 6983982886634214308, guid: f2f78377156eca9409a59bd781f4087e,
         type: 3}
       propertyPath: moveSpots.Array.data[0]
@@ -5385,8 +5479,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4c747d66d55144ea11440de8cccd52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
-  lives: 3
   scoreText: {fileID: 232123771}
   livesText: {fileID: 709516769}
 --- !u!1 &1910347963

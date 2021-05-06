@@ -2,12 +2,19 @@
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class UIManager : MonoBehaviour
+public class uiManager : MonoBehaviour
 {
-    public int score = 0;
-    public int lives = 3;
+    public static int score = 0;
+    public static int lives = 3;
     public TMP_Text scoreText;
     public TMP_Text livesText;
+
+    void Start()
+    {
+        scoreText.text = "Score: " + score.ToString();
+        livesText.text = "Lives: " + lives.ToString();
+    }
+
 
     //This method holds and manipulates the users score
     public void IncrementScore()
@@ -26,5 +33,11 @@ public class UIManager : MonoBehaviour
         {
             SceneManager.LoadScene("GameOver");
         }
+    }
+
+    public void Reset()
+    {
+        score = 0;
+        lives = 3;
     }
 }

@@ -25,6 +25,7 @@ public class securityCamera : MonoBehaviour
     private int raycast = 40;
     RaycastHit hit;
 
+    //variables for line of sight layer
     private Mesh mesh;
     private MeshFilter lOSLayer;
     private Material lOSColour;
@@ -82,9 +83,6 @@ public class securityCamera : MonoBehaviour
         StartCoroutine(FSM());
     }
 
-    //Here I create a finite state machine in which the AI follows
-    //When spawned in the AI will go into its PATROL state where they navigate the map according the its choosen destination is
-    //If the AI engages with the user they will switch to their CHASE state until the user is out of sight or caught, to which the AI will revert back to the state PATROL 
     IEnumerator FSM()
     {
         while (alive)
@@ -156,7 +154,7 @@ public class securityCamera : MonoBehaviour
             if (Physics.Raycast(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), out hit, maskSightDist/2, layerMask))
             {
                 points[i] = hit.point - transform.position;
-                Debug.DrawRay(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), Color.red);
+                //Debug.DrawRay(transform.position, RadiansToVector3(angle * Mathf.Deg2Rad), Color.red);
             }
             else
             {
@@ -166,14 +164,20 @@ public class securityCamera : MonoBehaviour
 
         lOSLayer.mesh = CreateMesh(points);
 
-        Vector3 dir1 = Quaternion.Euler(0, 15, 0) * transform.forward;
-        Vector3 dir2 = Quaternion.Euler(0, 22.5f, 0) * transform.forward;
-        Vector3 dir3 = Quaternion.Euler(0, 30, 0) * transform.forward;
-        Vector3 dir4 = Quaternion.Euler(0, 7.5f, 0) * transform.forward;
-        Vector3 dir5 = Quaternion.Euler(0, -15, 0) * transform.forward;
-        Vector3 dir6 = Quaternion.Euler(0, -22.5f, 0) * transform.forward;
-        Vector3 dir7 = Quaternion.Euler(0, -30, 0) * transform.forward;
+        Vector3 dir1 = Quaternion.Euler(0, 7.5f, 0) * transform.forward;
+        Vector3 dir2 = Quaternion.Euler(0, 15, 0) * transform.forward;
+        Vector3 dir3 = Quaternion.Euler(0, 22.5f, 0) * transform.forward;
+        Vector3 dir4 = Quaternion.Euler(0, 30, 0) * transform.forward;
+        Vector3 dir5 = Quaternion.Euler(0, 37.5f, 0) * transform.forward;
+        Vector3 dir6 = Quaternion.Euler(0, 45, 0) * transform.forward;
+        Vector3 dir7 = Quaternion.Euler(0, 52.5f, 0) * transform.forward;
         Vector3 dir8 = Quaternion.Euler(0, -7.5f, 0) * transform.forward;
+        Vector3 dir9 = Quaternion.Euler(0, -15, 0) * transform.forward;
+        Vector3 dir10 = Quaternion.Euler(0, -22.5f, 0) * transform.forward;
+        Vector3 dir11 = Quaternion.Euler(0, -30, 0) * transform.forward;
+        Vector3 dir12 = Quaternion.Euler(0, -37.5f, 0) * transform.forward;
+        Vector3 dir13 = Quaternion.Euler(0, -45, 0) * transform.forward;
+        Vector3 dir14 = Quaternion.Euler(0, -52.5f, 0) * transform.forward;
 
         Debug.DrawRay(transform.position, transform.forward * sightDist, Color.black);
         Debug.DrawRay(transform.position, (transform.forward + dir1).normalized * sightDist, Color.black);
@@ -184,9 +188,13 @@ public class securityCamera : MonoBehaviour
         Debug.DrawRay(transform.position, (transform.forward + dir6).normalized * sightDist, Color.black);
         Debug.DrawRay(transform.position, (transform.forward + dir7).normalized * sightDist, Color.black);
         Debug.DrawRay(transform.position, (transform.forward + dir8).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir9).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir10).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir11).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir12).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir13).normalized * sightDist, Color.black);
+        Debug.DrawRay(transform.position, (transform.forward + dir14).normalized * sightDist, Color.black);
 
-        //Here I am creating three raycasts which work as the AI's vision
-        //When the user is caught in a raycast the FSM will kick in and the AI will begin chasing the user, whilst their is no target in sight the AI will go back to patrolling
         if (Physics.Raycast(transform.position, transform.forward, out hit, sightDist))
         {
             if (hit.collider.gameObject.tag == "MC")

@@ -23,6 +23,8 @@ TagManager:
   - Start
   - kLocations
   - cLocations
+  - DoorSensor
+  - Door3
   layers:
   - Default
   - TransparentFX

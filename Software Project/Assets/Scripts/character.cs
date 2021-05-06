@@ -3,15 +3,18 @@ using UnityEngine.SceneManagement;
 
 public class character : MonoBehaviour
 {
-    public UIManager ui;
+    public uiManager ui;
 
     Vector3 original_pos;
     Rigidbody mc;
     Rigidbody projectile;
-    Rigidbody cloak;
     GameObject proj;
-    GameObject clk;
     GameObject door;
+    GameObject child;
+
+    Renderer mcColour;
+    Color colour1;
+    Color colour2;
 
     private float timerStart = 0;
     private float timerStop = 4;
@@ -26,12 +29,14 @@ public class character : MonoBehaviour
         mc = GetComponent<Rigidbody>();
 
         proj = Resources.Load("Projectile") as GameObject;
-        clk = Resources.Load("Cloak") as GameObject;
         door = Resources.Load("Door1") as GameObject;
+
+        Color colour1 = new Color(0.1f, 0.5f, 1);
+        Color colour2 = new Color(0.1f, 0.5f, 1);
 
         original_pos = new Vector3(mc.transform.position.x, mc.transform.position.y, mc.transform.position.z);
 
-        ui = GameObject.FindWithTag("ui").GetComponent<UIManager>();
+        ui = GameObject.FindWithTag("ui").GetComponent<uiManager>();
     }
 
     void OnTriggerEnter(Collider col)
@@ -113,12 +118,22 @@ public class character : MonoBehaviour
         {
             gameObject.tag = "MCHidden";
             mc.drag = hiddenSpeed;
+
+            foreach (Renderer mcColour in GetComponentsInChildren<Renderer>())
+            {
+                mcColour.material.color = new Color(0.75f, 0.84f, 1); ;
+            }
         }
 
         if (Input.GetMouseButtonUp(1))
         {
             gameObject.tag = "MC";
             mc.drag = normalSpeed;
+
+            foreach (Renderer mcColour in GetComponentsInChildren<Renderer>())
+            {
+                mcColour.material.color = new Color(0.19f, 0.5f, 1); ;
+            }
         }
 
         if (GameObject.FindWithTag("Door") == null)
